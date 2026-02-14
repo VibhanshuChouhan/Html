@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine Proposal</title>
+  <style>
+    body {
+      background-color: #ffe6e6;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .container {
+      margin-top: 100px;
+      position: relative;
+      z-index: 2;
+    }
+    h1 {
+      color: #d6336c;
+    }
+    button {
+      background-color: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #cc0000;
+    }
+    #message {
+      font-size: 24px;
+      color: #d6336c;
+      margin-top: 30px;
+      display: none;
+    }
+    #speech {
+      font-size: 20px;
+      color: #b3003b;
+      margin-top: 20px;
+      display: none;
+      white-space: pre-line;
+    }
+    #finalYes {
+      display: none;
+      margin-top: 30px;
+      font-size: 22px;
+      padding: 12px 25px;
+      border-radius: 12px;
+      background-color: #ff1a75;
+      color: white;
+      border: none;
+      cursor: pointer;
+      animation: glow 1.5s infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #ff99cc; }
+      to { box-shadow: 0 0 25px #ff1a75; }
+    }
+    .flower {
+      position: fixed;
+      top: -50px;
+      font-size: 24px;
+      animation: fall 4s linear forwards;
+      z-index: 3;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+    /* Sparkling hearts */
+    .heart {
+      position: fixed;
+      font-size: 20px;
+      color: #ff3366;
+      animation: sparkle 3s linear forwards;
+      z-index: 1;
+      opacity: 0.8;
+    }
+    @keyframes sparkle {
+      0% { transform: scale(0.5) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+      100% { transform: scale(0.5) rotate(360deg); opacity: 0; }
+    }
+    /* Fireworks */
+    .firework {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: red;
+      animation: explode 1s ease-out forwards;
+      z-index: 4;
+    }
+    @keyframes explode {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(20); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="#" id="startLink">Click here 💌</a>
+    <div id="question" style="display:none;">
+      <h1>Will you be my Valentine?</h1>
+      <div id="options">
+        <button onclick="yesClicked()">Yes</button>
+        <button onclick="noClicked()">No</button>
+      </div>
+    </div>
+    <div id="message">❤️ I Love You ❤️<br>Happy Valentine’s Day! 🌹</div>
+    <div id="speech"></div>
+    <button id="finalYes" onclick="finalYesClicked()">Yes, I’ll be yours 💖</button>
+  </div>
+
+  <!-- Background music -->
+  <audio id="bgMusic" src="romantic.mp3" preload="auto"></audio>
+
+  <script>
+    let noStage = 0;
+    document.getElementById("startLink").addEventListener("click", function(e){
+      e.preventDefault();
+      document.getElementById("startLink").style.display = "none";
+      document.getElementById("question").style.display = "block";
+    });
+
+    function noClicked() {
+      noStage++;
+      const optionsDiv = document.getElementById("options");
+      if(noStage === 1) {
+        optionsDiv.innerHTML = `
+          <button onclick="yesClicked()">Yes</button>
+          <button onclick="noClicked()">Think Again</button>
+        `;
+      } else if(noStage === 2) {
+        optionsDiv.innerHTML = `
+          <button onclick="yesClicked()">Yes</button>
+          <button onclick="noClicked()">Really?</button>
+        `;
+      } else {
+        optionsDiv.innerHTML = `
+          <button onclick="yesClicked()">Yes</button>
+        `;
+      }
+    }
+
+    function yesClicked() {
+      document.getElementById("question").style.display = "none";
+      document.getElementById("message").style.display = "block";
+
+      // Play background music with fade-in
+      const music = document.getElementById("bgMusic");
+      music.volume = 0; 
+      music.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        if(vol < 1) {
+          vol += 0.05;
+          music.volume = vol;
+        } else {
+          clearInterval(fade);
+        }
+      }, 200);
+
+      // Flower rain
+      for(let i=0; i<30; i++) {
+        createFlower();
+      }
+
+      // Sparkling hearts
+      for(let i=0; i<40; i++) {
+        createHeart();
+      }
+
+      // Romantic speech typing effect
+      const speechText = "From the moment I met you, my world has been brighter.\n\nEvery smile you give lights up my heart.\n\nOn this Valentine’s Day, I want to say...\n\nI choose you, today and always.\n\nWill you walk with me in this journey of love? 💖";
+      typeWriter(speechText);
+    }
+
+    function createFlower() {
+      const flower = document.createElement("div");
+      flower.className = "flower";
+      flower.innerHTML = "🌸";
+      flower.style.left = Math.random() * window.innerWidth + "px";
+      document.body.appendChild(flower);
+      setTimeout(() => flower.remove(), 4000);
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "💖";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.top = Math.random() * window.innerHeight + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    function typeWriter(text) {
+      const speechDiv = document.getElementById("speech");
+      speechDiv.style.display = "block";
+      let i = 0;
+      const interval = setInterval(() => {
+        speechDiv.innerHTML = text.substring(0, i+1);
+        i++;
+        if(i === text.length) {
+          clearInterval(interval);
+          // Show glowing final Yes button after speech finishes
+          document.getElementById("finalYes").style.display = "inline-block";
+        }
+      }, 50);
+    }
+
+    function finalYesClicked() {
+      alert("Forever yours 💞");
+      // Fireworks burst
+      for(let i=0; i<20; i++) {
+        createFirework();
+      }
+    }
+
+    function createFirework() {
+      const firework = document.createElement("div");
+      firework.className = "firework";
+      firework.style.left = Math.random() * window.innerWidth + "px";
+      firework.style.top = Math.random() * window.innerHeight + "px";
+      firework.style.background = randomColor();
+      document.body.appendChild(firework);
+      setTimeout(() => firework.remove(), 1000);
+    }
+
+    function randomColor() {
+      const colors = ["#ff1a75","#ffcc00","#00ccff","#66ff66","#ff6600"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+</body>
+</html>
